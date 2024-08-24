@@ -36,10 +36,11 @@ import ollama
 from simple_agents.tools_generator import get_relevant_tools, tools, tool_func, call_tools
 
 @tool_func
-def print_to_console(msg: str) -> None:
+def print_to_console(msg: str) -> str:
     "print the given msg(str) to console"
 
     print(msg)
+    return "print_to_console" + msg 
 
 client = ollama.Client()
 chat = "Can you print in console ?"
@@ -49,7 +50,10 @@ response = client.chat(
         tools=get_relevant_tools(chat),
         options=ollama.Options(temperature=0.5),
     )
+if response["message"].get("tool_calls"):
+    print(call_tools(response["message"]["tool_calls"]))
+
 
 ```
 
-_Work is progress_
+
